@@ -1,0 +1,81 @@
+baseURL = 'https://hiro20220528.github.io/'
+languageCode = 'ja-jp' # 日本語
+title = 'Yuta のブログ'
+theme = "paper"
+enableInlineShortcodes = true
+copyright = "© 2025, Yuta"
+
+[params]
+  color = "linen" 
+
+  github = "Hiro20220528"
+  twitter = "_____yyuta"
+  rss = true
+
+  avatar = "" # これはgithub actionsで設定する
+  name = "Yuta"
+  bio = "Software Engineer"
+
+[menu]
+  [[menu.main]]
+    identifier = "profile"
+    name = "Profile"
+    url = "/profile/"
+    weight = 1
+
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 2
+
+# -------------------------------
+# Markdownの設定
+# -------------------------------
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true  # Markdown内でHTMLタグを使えるようにする（<script> などを有効化）
+
+  [markup.highlight]  # コメントアウトされているが、コードブロックの行番号を表示する設定
+     lineNos = true
+
+
+# -------------------------------
+# タクソノミー（カテゴリ・タグ）設定
+# -------------------------------
+[taxonomies]
+category = "categories"  # カテゴリーを "categories" というタクソノミーで管理
+tag = "tags"             # タグを "tags" というタクソノミーで管理
+series = "series"        # シリーズを "series" というタクソノミーで管理
+
+# -------------------------------
+# プライバシー設定（埋め込みコンテンツの制御）
+# -------------------------------
+[privacy]
+  [privacy.vimeo]
+    disabled = false  # Vimeoの埋め込みを許可
+    simple = true     # 簡易な埋め込みプレイヤーを使用
+
+  [privacy.x]  # X（旧Twitter）の埋め込み設定
+    disabled = false
+    enableDNT = true  # "Do Not Track" (DNT) を有効化（トラッキングを軽減）
+    simple = true     # 簡易な埋め込み表示を使用
+
+  [privacy.instagram]
+    disabled = false
+    simple = true
+
+  [privacy.youtube]
+    disabled = false
+    privacyEnhanced = true  # YouTubeのプライバシー強化モードを有効化
+
+# -------------------------------
+# サービス設定（外部サービスの埋め込み設定）
+# -------------------------------
+[services]
+  [services.instagram]
+    disableInlineCSS = true  # Instagramの埋め込みで、Hugoが追加するCSSを無効化
+
+  [services.x]
+    disableInlineCSS = true  # X（旧Twitter）の埋め込みで、Hugoが追加するCSSを無効化
