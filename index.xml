@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yuta のブログ</title><link>https://hiro20220528.github.io/</link><description>Recent content on Yuta のブログ</description><generator>Hugo</generator><language>ja-jp</language><copyright>© 2025, Yuta</copyright><lastBuildDate>Sat, 15 Mar 2025 19:08:12 +0900</lastBuildDate><atom:link href="https://hiro20220528.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>このサイトについて</title><link>https://hiro20220528.github.io/about/</link><pubDate>Sat, 15 Mar 2025 19:08:12 +0900</pubDate><guid>https://hiro20220528.github.io/about/</guid><description>&lt;p>日本語だったり英語だったり気分でメモを取るためのサイト&lt;/p>
+&lt;p>技術的に面白いものは他の有名なサイトに投稿している&lt;/p></description></item><item><title>How to Create This Site</title><link>https://hiro20220528.github.io/posts/how-to-create-this-site/</link><pubDate>Sat, 15 Mar 2025 17:19:10 +0900</pubDate><guid>https://hiro20220528.github.io/posts/how-to-create-this-site/</guid><description>&lt;p>初投稿&lt;/p>
+&lt;p>どのようにしてこのサイトを作成したのかを書き留めておく.&lt;/p>
+&lt;p>このサイトは&lt;a href="https://gohugo.io/">Hugo&lt;/a>というGoのフレームワークを用いて作成されている.&lt;/p>
+&lt;p>Hugoについては公式サイトを読んでほしい.&lt;/p>
+&lt;p>Hugoのチュートリアルに沿ってプロジェクトを作成すると以下のディレクトリ構成になる.&lt;/p>
+&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-zsh" data-lang="zsh">&lt;span style="display:flex;">&lt;span>tree -L &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── README.md &lt;span style="color:#75715e"># 自分で追加した&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── archetypes &lt;span style="color:#75715e"># ページのテンプレートが入っている&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── content &lt;span style="color:#75715e"># 実際のページを入れる&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── hugo.toml &lt;span style="color:#75715e"># 設定&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── public &lt;span style="color:#75715e"># buildしたファイルがここに入る&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>└── themes &lt;span style="color:#75715e"># 使用するテーマがここに入る&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>テーマはHugoの公式サイトから探せる. どうやってテーマを適用するのかは他のサイトにあるので省略する.&lt;/p>
+&lt;p>このサイトはGitHub Pagesとして公開されている. どのようにして公開しているのかを説明する.&lt;/p>
+&lt;p>GitHub Pagesで公開するには, &lt;code>自分のGitHubのアカウント名.github.io&lt;/code>でレポジトリーを作成する.
+Hugoでサイト作成後, &lt;code>hugo build&lt;/code>などのコマンドを用いてpublic/にサイトを準備する. そして, public直下のデータを全てルートディレクトリに持ってくると公開できる. 従って別ブランチでサイト執筆を行い, mainブランチにはpublic/のデータ全てがあるようにするべきである. このサイトではGitHub Actionsを用いてdevelopブランチで執筆を行い, リモートにpushされると自動的に適応するようになっている. 以下で詳しく説明する.&lt;/p></description></item></channel></rss>
