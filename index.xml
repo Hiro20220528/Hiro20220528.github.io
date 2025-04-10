@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yuta のブログ</title><link>https://hiro20220528.github.io/</link><description>Recent content on Yuta のブログ</description><generator>Hugo</generator><language>ja-jp</language><copyright>© 2025, Yuta</copyright><lastBuildDate>Thu, 10 Apr 2025 21:07:47 +0900</lastBuildDate><atom:link href="https://hiro20220528.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Building the Browser From Scratch</title><link>https://hiro20220528.github.io/posts/building-the-browser-from-scratch/</link><pubDate>Thu, 10 Apr 2025 21:07:47 +0900</pubDate><guid>https://hiro20220528.github.io/posts/building-the-browser-from-scratch/</guid><description>&lt;p>「作って学ぶ」ブラウザのしくみ を読んだ&lt;/p>
+&lt;p>Amazonのリンクは&lt;a href="https://www.amazon.co.jp/dp/4297145464?ref=ppx_yo2ov_dt_b_fed_asin_title">こちら&lt;/a>&lt;/p>
+&lt;p>以下に簡単に内容をまとめる&lt;/p>
+&lt;details>
+&lt;summary>目次&lt;/summary>
+&lt;ul>
+&lt;li>&lt;a href="#1-%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%82%92%E7%9F%A5%E3%82%8B">1. ブラウザを知る&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#2-url%E3%82%92%E5%88%86%E8%A7%A3%E3%81%99%E3%82%8B">2. URLを分解する&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#3-http%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B">3. HTTPを実装する&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#4-html%E3%82%92%E8%A7%A3%E6%9E%90%E3%81%99%E3%82%8B">4. HTMLを解析する&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#5-css%E3%81%A7%E8%A3%85%E9%A3%BE%E3%81%99%E3%82%8B">5. CSSで装飾する&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#6-gui%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B">6. GUIを実装する&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#7-javascript%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B">7. JavaScriptを実装する&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/details>
+&lt;h3 id="1-ブラウザを知る">1. ブラウザを知る&lt;/h3>
+&lt;p>まずは、ブラウザが画面を表示するまでの全体像をまとめる。&lt;/p>
+&lt;ol>
+&lt;li>ブラウザはまず、以下の流れでデータを取得する。&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code class="language-mermaid" data-lang="mermaid">sequenceDiagram
+ participant ブラウザ
+ participant DNSサーバ
+ participant Webサーバ
+ ブラウザ-&amp;gt;&amp;gt;DNSサーバ: DNSクエリ（問い合わせ）の送信
+ activate DNSサーバ
+ DNSサーバ--&amp;gt;&amp;gt;ブラウザ: IPアドレスを返す
+ deactivate DNSサーバ
+ ブラウザ-&amp;gt;&amp;gt;Webサーバ: HTTPリクエスト
+ activate Webサーバ
+ Webサーバ--&amp;gt;&amp;gt;ブラウザ: HTTPレスポンス
+ deactivate Webサーバ
+&lt;/code>&lt;/pre>&lt;ol start="2">
+&lt;li>その次に、ブラウザは取得したデータ（HTTPレスポンス）を解析し、HTMLの部分を取り出す。&lt;/li>
+&lt;/ol>
+&lt;p>取得したHTTPレスポンスの例（HTTPはテキストベースのプロトコル）&lt;/p>
+&lt;pre tabindex="0">&lt;code>HTTP/1.1 200 OK\nContent-Type: text/html; charset=UTF-8\n\n&amp;lt;html&amp;gt;&amp;lt;head&amp;gt;&amp;lt;title&amp;gt;My First Web Page&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;&amp;lt;body&amp;gt;&amp;lt;h1&amp;gt;Hello, World!&amp;lt;/h1&amp;gt;&amp;lt;div&amp;gt;&amp;lt;p&amp;gt;This is a paragraph.&amp;lt;/p&amp;gt;&amp;lt;ul&amp;gt;&amp;lt;li&amp;gt;Item 1&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;Item 2&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;Item 3&amp;lt;/li&amp;gt;&amp;lt;/ul&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>見やすいようにすると以下の形式となる&lt;/p>
+&lt;pre tabindex="0">&lt;code>HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+
+&amp;lt;html&amp;gt;
+ &amp;lt;head&amp;gt;
+ &amp;lt;title&amp;gt;My First Web Page&amp;lt;/title&amp;gt;
+ &amp;lt;/head&amp;gt;
+ &amp;lt;body&amp;gt;
+ &amp;lt;h1&amp;gt;Hello, World!&amp;lt;/h1&amp;gt;
+ &amp;lt;div&amp;gt;
+ &amp;lt;p&amp;gt;This is a paragraph.&amp;lt;/p&amp;gt;
+ &amp;lt;ul&amp;gt;
+ &amp;lt;li&amp;gt;Item 1&amp;lt;/li&amp;gt;
+ &amp;lt;li&amp;gt;Item 2&amp;lt;/li&amp;gt;
+ &amp;lt;li&amp;gt;Item 3&amp;lt;/li&amp;gt;
+ &amp;lt;/ul&amp;gt;
+ &amp;lt;/div&amp;gt;
+ &amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code>&lt;/pre>&lt;ol start="3">
+&lt;li>ブラウザは取得したHTMLを以下の流れで解析する。&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code class="language-mermaid" data-lang="mermaid">graph LR
+ Text[文字列] --&amp;gt; Token[トークン]
+ Token --&amp;gt; DOM[DOMツリー]
+&lt;/code>&lt;/pre>&lt;h3 id="2-urlを分解する">2. URLを分解する&lt;/h3>
+&lt;h3 id="3-httpを実装する">3. HTTPを実装する&lt;/h3>
+&lt;h3 id="4-htmlを解析する">4. HTMLを解析する&lt;/h3>
+&lt;h3 id="5-cssで装飾する">5. CSSで装飾する&lt;/h3>
+&lt;h3 id="6-guiを実装する">6. GUIを実装する&lt;/h3>
+&lt;h3 id="7-javascriptを実装する">7. JavaScriptを実装する&lt;/h3></description></item><item><title>このサイトについて</title><link>https://hiro20220528.github.io/about/</link><pubDate>Sat, 15 Mar 2025 19:08:12 +0900</pubDate><guid>https://hiro20220528.github.io/about/</guid><description>&lt;p>日本語だったり英語だったり気分でメモを取るためのサイト&lt;/p>
+&lt;p>技術的に面白いものは他の有名なサイトに投稿している&lt;/p></description></item><item><title>How to Create This Site</title><link>https://hiro20220528.github.io/posts/how-to-create-this-site/</link><pubDate>Sat, 15 Mar 2025 17:19:10 +0900</pubDate><guid>https://hiro20220528.github.io/posts/how-to-create-this-site/</guid><description>&lt;p>初投稿&lt;/p>
+&lt;p>どのようにしてこのサイトを作成したのかを書き留めておく.&lt;/p>
+&lt;p>このサイトは&lt;a href="https://gohugo.io/">Hugo&lt;/a>というGoのフレームワークを用いて作成されている.&lt;/p>
+&lt;p>Hugoについては公式サイトを読んでほしい.&lt;/p>
+&lt;p>Hugoのチュートリアルに沿ってプロジェクトを作成すると以下のディレクトリ構成になる.&lt;/p>
+&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-zsh" data-lang="zsh">&lt;span style="display:flex;">&lt;span>tree -L &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── README.md &lt;span style="color:#75715e"># 自分で追加した&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── archetypes &lt;span style="color:#75715e"># ページのテンプレートが入っている&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── content &lt;span style="color:#75715e"># 実際のページを入れる&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── hugo.toml &lt;span style="color:#75715e"># 設定&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── public &lt;span style="color:#75715e"># buildしたファイルがここに入る&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>└── themes &lt;span style="color:#75715e"># 使用するテーマがここに入る&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>テーマはHugoの公式サイトから探せる. どうやってテーマを適用するのかは他のサイトにあるので省略する.&lt;/p>
+&lt;p>このサイトはGitHub Pagesとして公開されている. どのようにして公開しているのかを説明する.&lt;/p>
+&lt;p>GitHub Pagesで公開するには, &lt;code>自分のGitHubのアカウント名.github.io&lt;/code>でレポジトリーを作成する.
+Hugoでサイト作成後, &lt;code>hugo build&lt;/code>などのコマンドを用いてpublic/にサイトを準備する. そして, public直下のデータを全てルートディレクトリに持ってくると公開できる. 従って別ブランチでサイト執筆を行い, mainブランチにはpublic/のデータ全てがあるようにするべきである. このサイトではGitHub Actionsを用いてdevelopブランチで執筆を行い, リモートにpushされると自動的に適応するようになっている. 以下で詳しく説明する.&lt;/p></description></item></channel></rss>
