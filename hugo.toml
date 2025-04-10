@@ -8,6 +8,8 @@ copyright = "© 2025, Yuta"
 [params]
   color = "linen" 
 
+  enableMermaid = true
+
   github = "Hiro20220528"
   twitter = "_____yyuta"
   rss = true
