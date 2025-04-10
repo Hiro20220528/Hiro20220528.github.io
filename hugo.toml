@@ -4,11 +4,10 @@ title = 'Yuta のブログ'
 theme = "paper"
 enableInlineShortcodes = true
 copyright = "© 2025, Yuta"
+enableMermaid = true
 
 [params]
   color = "linen" 
-
-  enableMermaid = true
 
   github = "Hiro20220528"
   twitter = "_____yyuta"
