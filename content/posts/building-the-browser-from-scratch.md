@@ -26,14 +26,6 @@ Amazonのリンクは[こちら](https://www.amazon.co.jp/dp/4297145464?ref=ppx_
 ### 1. ブラウザを知る
 まずは、ブラウザが画面を表示するまでの全体像をまとめる。
 
-
-<div class="mermaid">
-graph TD
-    A[開始] --> B[処理1]
-    B --> C[処理2]
-    C --> D[終了]
-</div>
-
 1. ブラウザはまず、以下の流れでデータを取得する。
 <div class="mermaid">
 sequenceDiagram
