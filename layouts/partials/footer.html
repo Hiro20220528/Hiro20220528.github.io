@@ -7,10 +7,27 @@
     </div>
     <a class="link mx-6" href="https://gohugo.io/" rel="noopener" target="_blank">powered by hugo</a>
     <a class="link" href="https://github.com/nanxiaobei/hugo-paper" rel="noopener" target="_blank">hugo-paper</a>
-    {{ if .Site.Params.enableMermaid }}
+    {{ if site.Params.enableMermaid }}
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script>
-        mermaid.initialize({ startOnLoad: true });
+        // システムのダークモード設定を検出
+        const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // ダークモードに応じてテーマを設定
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: prefersDarkMode ? 'dark' : 'default'
+        });
+        
+        // ダークモード設定の変更を監視
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            const newTheme = event.matches ? 'dark' : 'default';
+            // Mermaidを再初期化
+            mermaid.initialize({ 
+                startOnLoad: true,
+                theme: newTheme
+            });
+        });
     </script>
     {{ end }}
 </footer>
