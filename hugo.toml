@@ -4,7 +4,7 @@ title = 'Yuta のブログ'
 theme = "paper"
 enableInlineShortcodes = true
 copyright = "© 2025, Yuta"
-enableMermaid = true
+
 
 [params]
   color = "linen" 
@@ -16,6 +16,8 @@ enableMermaid = true
   avatar = "" # これはgithub actionsで設定する
   name = "Yuta"
   bio = "Software Engineer"
+
+  enableMermaid = true
 
 [menu]
   [[menu.main]]

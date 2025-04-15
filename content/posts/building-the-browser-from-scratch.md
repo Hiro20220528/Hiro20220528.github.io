@@ -26,8 +26,16 @@ Amazonのリンクは[こちら](https://www.amazon.co.jp/dp/4297145464?ref=ppx_
 ### 1. ブラウザを知る
 まずは、ブラウザが画面を表示するまでの全体像をまとめる。
 
+
+<div class="mermaid">
+graph TD
+    A[開始] --> B[処理1]
+    B --> C[処理2]
+    C --> D[終了]
+</div>
+
 1. ブラウザはまず、以下の流れでデータを取得する。
-```mermaid
+<div class="mermaid">
 sequenceDiagram
     participant ブラウザ
     participant DNSサーバ
@@ -40,9 +48,9 @@ sequenceDiagram
     activate Webサーバ
     Webサーバ-->>ブラウザ: HTTPレスポンス
     deactivate Webサーバ
-```
+</div>
 
-2. その次に、ブラウザは取得したデータ（HTTPレスポンス）を解析し、HTMLの部分を取り出す。
+1. その次に、ブラウザは取得したデータ（HTTPレスポンス）を解析し、HTMLの部分を取り出す。
 
 取得したHTTPレスポンスの例（HTTPはテキストベースのプロトコル）
 ```
@@ -74,11 +82,11 @@ Content-Type: text/html; charset=UTF-8
 
 3. ブラウザは取得したHTMLを以下の流れで解析する。
 
-```mermaid
+<div class="mermaid">
 graph LR
     Text[文字列] --> Token[トークン]
     Token --> DOM[DOMツリー]
-```
+</div>
 
 
 ### 2. URLを分解する
