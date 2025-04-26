@@ -17,8 +17,6 @@ copyright = "© 2025, Yuta"
   name = "Yuta"
   bio = "Software Engineer"
 
-  enableMermaid = true
-
 [menu]
   [[menu.main]]
     identifier = "profile"
@@ -40,8 +38,9 @@ copyright = "© 2025, Yuta"
     [markup.goldmark.renderer]
       unsafe = true  # Markdown内でHTMLタグを使えるようにする（<script> などを有効化）
 
-  [markup.highlight]  # コメントアウトされているが、コードブロックの行番号を表示する設定
-     lineNos = true
+  #[markup.highlight]  # コメントアウトされているが、コードブロックの行番号を表示する設定
+     #lineNos = true
+     #lineNumbersInTable = true
 
 
 # -------------------------------

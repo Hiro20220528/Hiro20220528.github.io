@@ -14,7 +14,7 @@ https://www.google.com/search?q=browser
 
 以下がURLの構成を表すRustのコードである.
 
-```Rust
+```rust
 pub struct Url {
     url: String, // https://www.google.com/search?q=browser&test=test
     host: String, // www.google.com
@@ -28,7 +28,7 @@ pub struct Url {
 
 以下は`host`フィールドの値を取得するRustのコードである.
 
-```Rust
+```rust
 fn extract_host(&self) -> String {
         // ex: url = "http://example.com:8080/path/to/resource?query=string"
         let url_parts: Vec<&str> = self
