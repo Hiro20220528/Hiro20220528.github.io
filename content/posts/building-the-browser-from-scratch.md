@@ -29,6 +29,8 @@ Amazonのリンクは[こちら](https://www.amazon.co.jp/dp/4297145464?ref=ppx_
 
 ### 2. URLを分解する
 
+{{< include "content/posts/building-the-browser-from-scratch/url.md" >}}
+
 ### 3. HTTPを実装する
 
 ### 4. HTMLを解析する
