@@ -10,38 +10,54 @@ Amazonのリンクは[こちら](https://www.amazon.co.jp/dp/4297145464?ref=ppx_
 
 以下に簡単に内容をまとめる
 
-<details>
+<!-- <details>
 <summary>目次</summary>
 
-- [1. ブラウザを知る](#1-ブラウザを知る)
-- [2. URLを分解する](#2-urlを分解する)
-- [3. HTTPを実装する](#3-httpを実装する)
-- [4. HTMLを解析する](#4-htmlを解析する)
-- [5. CSSで装飾する](#5-cssで装飾する)
-- [6. GUIを実装する](#6-guiを実装する)
-- [7. JavaScriptを実装する](#7-javascriptを実装する)
+- [1. ブラウザを知る](#chapter-1)
+- [2. URLを分解する](#chapter-2)
+- [3. HTTPを実装する](#chapter-3)
+- [4. HTMLを解析する](#chapter-4)
+- [5. CSSで装飾する](#chapter-5)
+- [6. GUIを実装する](#chapter-6)
+- [7. JavaScriptを実装する](#chapter-7)
 
+</details> -->
+
+<details>
+<summary style="font-size: 1.5rem;" class="chapter-1"> 1. ブラウザを知る </summary>
+{{< include "assets/includes/building-the-browser-from-scratch/overview.md" >}}
 </details>
 
-### 1. ブラウザを知る
-
-{{< include "assets/includes/building-the-browser-from-scratch/overview.md" >}}
-
-### 2. URLを分解する
-
+<details>
+<summary style="font-size: 1.5rem;" class="chapter-2"> 2. URLを分解する </summary>
 {{< include "assets/includes/building-the-browser-from-scratch/url.md" >}}
+</details>
 
-### 3. HTTPを実装する
-
+<details>
+<summary style="font-size: 1.5rem;" class="chapter-3"> 3. HTTPを実装する </summary>
 {{< include "assets/includes/building-the-browser-from-scratch/http.md" >}}
+</details>
 
-### 4. HTMLを解析する
+<details>
+<summary style="font-size: 1.5rem;" class="chapter-4"> 4. HTMLを解析する </summary>
+{{< include "assets/includes/building-the-browser-from-scratch/html.md" >}}
+</details>
 
-### 5. CSSで装飾する
+<details>
+<summary style="font-size: 1.5rem;" class="chapter-5"> 5. CSSで装飾する </summary>
+{{< include "assets/includes/building-the-browser-from-scratch/css.md" >}}
+</details>
 
-### 6. GUIを実装する
+<details>
+<summary style="font-size: 1.5rem;" class="chapter-6"> 6. GUIを実装する </summary>
+{{< include "assets/includes/building-the-browser-from-scratch/gui.md" >}}
+</details>
 
-### 7. JavaScriptを実装する
+<details>
+<summary style="font-size: 1.5rem;" class="chapter-7"> 7. JavaScriptを実装する </summary>
+{{< include "assets/includes/building-the-browser-from-scratch/javascript.md" >}}
+</details>
+
 
 
 
