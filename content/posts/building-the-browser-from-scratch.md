@@ -25,11 +25,7 @@ Amazonのリンクは[こちら](https://www.amazon.co.jp/dp/4297145464?ref=ppx_
 
 ### 1. ブラウザを知る
 
-{{ $bundle := .Site.GetPage "page" "posts/building-the-browser-from-scratch" }}
-{{ with $bundle.Resources.GetMatch "overview.md" }}
-  {{ .Content }}
-{{ end }}
-
+{{< include "content/posts/building-the-browser-from-scratch/overview.md" >}}
 
 ### 2. URLを分解する
 
