@@ -25,11 +25,11 @@ Amazonのリンクは[こちら](https://www.amazon.co.jp/dp/4297145464?ref=ppx_
 
 ### 1. ブラウザを知る
 
-{{< include "content/posts/building-the-browser-from-scratch/overview.md" >}}
+{{< include "assets/includes/building-the-browser-from-scratch/overview.md" >}}
 
 ### 2. URLを分解する
 
-{{< include "content/posts/building-the-browser-from-scratch/url.md" >}}
+{{< include "assets/includes/building-the-browser-from-scratch/url.md" >}}
 
 ### 3. HTTPを実装する
 
