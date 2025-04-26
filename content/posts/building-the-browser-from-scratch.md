@@ -25,21 +25,6 @@ Amazonのリンクは[こちら](https://www.amazon.co.jp/dp/4297145464?ref=ppx_
 
 ### 1. ブラウザを知る
 
-<div class="mermaid">
-sequenceDiagram
-    participant ブラウザ
-    participant DNSサーバ
-    participant Webサーバ
-    ブラウザ->>DNSサーバ: DNSクエリ（問い合わせ）の送信
-    activate DNSサーバ
-    DNSサーバ-->>ブラウザ: IPアドレスを返す
-    deactivate DNSサーバ
-    ブラウザ->>Webサーバ: HTTPリクエスト
-    activate Webサーバ
-    Webサーバ-->>ブラウザ: HTTPレスポンス
-    deactivate Webサーバ
-</div>
-
 {{< include "content/posts/building-the-browser-from-scratch/overview.md" >}}
 
 ### 2. URLを分解する

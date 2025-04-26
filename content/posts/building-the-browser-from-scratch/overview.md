@@ -24,7 +24,7 @@ HTTP/1.1 200 OK\nContent-Type: text/html; charset=UTF-8\n\n<html><head><title>My
 ```
 
 見やすいようにすると以下の形式となる
-```
+```html
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=UTF-8
 
