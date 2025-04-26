@@ -10,16 +10,19 @@ HTTPには現在4つのバージョンがある.
 HTTP/1.1はテキストベースのプロトコルである.
 
 HTTPメッセージは, 大きく分けて3つの要素に分けることができる.
-1行目 : スタートライン (リクエスト時はリクエストライン, レスポンス時はステータスライン)
-2行目 : ヘッダ
-3行目 : ボディ
+- 1行目 : スタートライン (リクエスト時はリクエストライン, レスポンス時はステータスライン)
+- 2行目 : ヘッダ
+- 3行目 : ボディ
 
 以下はHTTPメッセージの各要素の説明
 
 1. スタートライン (リクエストとレスポンスで2種類存在)
 - リクエストライン ... どんな方法で、どのリソースにどのバージョンでアクセスするかの3つの情報を含む
 
-`request-line = method SP request-target SP HTTP-version CRLF` (SPはスペース, CRLFは改行)
+```
+request-line = method SP request-target SP HTTP-version CRLF
+(SPはスペース, CRLFは改行)
+```
 
 以下はその一例
 ```
@@ -28,7 +31,10 @@ GET /index.html HTTP/1.1
 
 - ステータスライン ... HTTPのどのバージョンを使うか, アクセス結果, 結果の説明の3つの情報を含む
 
-`status-line = HTTP-version SP status-code SP reason-phrase CRLF` (SPはスペース, CRLFは改行)
+```
+status-line = HTTP-version SP status-code SP reason-phrase CRLF
+(SPはスペース, CRLFは改行)
+```
 
 以下はその一例
 ```
@@ -53,4 +59,7 @@ Content-Type: text/html charset=utf-8
 
 3. ボディ ... GETレスポンスのボディにはHTMLなどのリソースの内容が含まれる.
 
+
+HTTPはテキストベースのプロトコルなので, 1行のテキストが返信される.
+そのテキストを分割して, HTTP レスポンスの各要素を取得する.
 
