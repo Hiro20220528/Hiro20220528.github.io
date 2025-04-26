@@ -33,6 +33,8 @@ Amazonのリンクは[こちら](https://www.amazon.co.jp/dp/4297145464?ref=ppx_
 
 ### 3. HTTPを実装する
 
+{{< include "assets/includes/building-the-browser-from-scratch/http.md" >}}
+
 ### 4. HTMLを解析する
 
 ### 5. CSSで装飾する
