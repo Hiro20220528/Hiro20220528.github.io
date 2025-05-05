@@ -45,15 +45,45 @@ stateDiagram
     AfterAfterBody --> [*]
 </div>
 
-例えば上の手順で実行すると以下のようなDOMツリーのイメージとなる
+例えば上の手順で以下のsample.htmlを実行すると次のようなDOMツリーのイメージとなる
+
+sample.html
+```html
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>Hello World</h1>
+        <div>
+            <p>This is a sample html.</p>
+            <ul>
+                <li>item1</li>
+                <li>item2</li>
+                <li>item3</li>
+            </ul>
+        </div>
+    </body>
+</html>
 ```
-Document
-└──HTML element
-    ├──HEAD element
-    └──BODY element
-        └──H1 element
-            └──"Hello World" 
-```
+
+DOMツリーのイメージ
+<div class="mermaid">
+graph LR
+    html[HTML] --> head[HEAD]
+    html --> body[BODY]
+    body --> h1[H1]
+    h1 --> hw[Hello World]
+    body --> div[DIV]
+    div --> p[P]
+    p --> p_text[This is a sample html.]
+    div --> ul[UL]
+    ul --> liA[LI]
+    liA --> liA_text[item1]
+    ul --> liB[LI]
+    liB --> liB_text[item2]
+    ul --> liC[LI]
+    liC --> liC_text[item3]
+</div>
 
 アルゴリズムにはFIFOを用いる.
 bodyの文字列を一文字ずつ見ていきトークン化する. そのトークンによってDOMツリーを形成していく. 基本的にEndTagが出現するとキューから要素を取り出す.
@@ -71,4 +101,5 @@ bodyの文字列を一文字ずつ見ていきトークン化する. そのト�
 |html|    |html|    |html|
 |____|    |____|    |____|
 ```
+
 
