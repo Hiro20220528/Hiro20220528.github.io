@@ -55,7 +55,7 @@ Amazonのリンクは[こちら](https://www.amazon.co.jp/dp/4297145464?ref=ppx_
 
 <details>
 <summary style="font-size: 1.5rem;" class="chapter-7"> 7. JavaScriptを実装する </summary>
-{{< include "assets/includes/building-the-browser-from-scratch/javascript.md" >}}
+{{< include "assets/includes/building-the-browser-from-scratch/js.md" >}}
 </details>
 
 
