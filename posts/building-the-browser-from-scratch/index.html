@@ -1,0 +1,232 @@
+<!doctype html><html class="not-ready lg:text-base" style=--bg:#faf8f1 lang=ja-jp dir=ltr><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><title>Building the Browser From Scratch-Yuta のブログ</title><meta name=theme-color><meta name=description content="「作って学ぶ」ブラウザのしくみ を読んだ
+Amazonのリンクはこちら
+以下に簡単に内容をまとめる
+
+
+ 1. ブラウザを知る 
+
+
+まずは、ブラウザが画面を表示するまでの全体像をまとめる。
+
+ブラウザはまず、以下の流れでデータを取得する。
+
+
+sequenceDiagram
+    participant ブラウザ
+    participant DNSサーバ
+    participant Webサーバ
+    ブラウザ->>DNSサーバ: DNSクエリ（問い合わせ）の送信
+    activate DNSサーバ
+    DNSサーバ-->>ブラウザ: IPアドレスを返す
+    deactivate DNSサーバ
+    ブラウザ->>Webサーバ: HTTPリクエスト
+    activate Webサーバ
+    Webサーバ-->>ブラウザ: HTTPレスポンス
+    deactivate Webサーバ
+
+
+その次に、ブラウザは取得したデータ（HTTPレスポンス）を解析し、HTMLの部分を取り出す。
+
+取得したHTTPレスポンスの例（HTTPはテキストベースのプロトコル）
+HTTP/1.1 200 OK\nContent-Type: text/html; charset=UTF-8\n\n<html><head><title>My First Web Page</title></head><body><h1>Hello, World!</h1><div><p>This is a paragraph.</p><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></div></body></html>
+見やすいようにすると以下の形式となる"><meta name=author content="Yuta"><link rel="preload stylesheet" as=style href=https://hiro20220528.github.io/main.min.css><link rel=preload as=image href=https://hiro20220528.github.io/theme.png><link rel=preload as=image href="https://www.gravatar.com/avatar/fb5374e0bf5e295c9879025f23060b46?s=160&amp;d=identicon"><link rel=preload as=image href=https://hiro20220528.github.io/twitter.svg><link rel=preload as=image href=https://hiro20220528.github.io/github.svg><link rel=preload as=image href=https://hiro20220528.github.io/rss.svg><script defer src=https://hiro20220528.github.io/highlight.min.js onload=hljs.initHighlightingOnLoad()></script><link rel=icon href=https://hiro20220528.github.io/favicon.ico><link rel=apple-touch-icon href=https://hiro20220528.github.io/apple-touch-icon.png><meta name=generator content="Hugo 0.147.5"><meta itemprop=name content="Building the Browser From Scratch"><meta itemprop=description content="「作って学ぶ」ブラウザのしくみ を読んだ
+Amazonのリンクはこちら
+以下に簡単に内容をまとめる
+1. ブラウザを知る まずは、ブラウザが画面を表示するまでの全体像をまとめる。
+ブラウザはまず、以下の流れでデータを取得する。 sequenceDiagram participant ブラウザ participant DNSサーバ participant Webサーバ ブラウザ->>DNSサーバ: DNSクエリ（問い合わせ）の送信 activate DNSサーバ DNSサーバ-->>ブラウザ: IPアドレスを返す deactivate DNSサーバ ブラウザ->>Webサーバ: HTTPリクエスト activate Webサーバ Webサーバ-->>ブラウザ: HTTPレスポンス deactivate Webサーバ その次に、ブラウザは取得したデータ（HTTPレスポンス）を解析し、HTMLの部分を取り出す。 取得したHTTPレスポンスの例（HTTPはテキストベースのプロトコル）
+HTTP/1.1 200 OK\nContent-Type: text/html; charset=UTF-8\n\n<html><head><title>My First Web Page</title></head><body><h1>Hello, World!</h1><div><p>This is a paragraph.</p><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></div></body></html> 見やすいようにすると以下の形式となる"><meta itemprop=datePublished content="2025-04-10T21:07:47+09:00"><meta itemprop=dateModified content="2025-04-10T21:07:47+09:00"><meta itemprop=wordCount content="750"><meta property="og:url" content="https://hiro20220528.github.io/posts/building-the-browser-from-scratch/"><meta property="og:site_name" content="Yuta のブログ"><meta property="og:title" content="Building the Browser From Scratch"><meta property="og:description" content="「作って学ぶ」ブラウザのしくみ を読んだ
+Amazonのリンクはこちら
+以下に簡単に内容をまとめる
+1. ブラウザを知る まずは、ブラウザが画面を表示するまでの全体像をまとめる。
+ブラウザはまず、以下の流れでデータを取得する。 sequenceDiagram participant ブラウザ participant DNSサーバ participant Webサーバ ブラウザ->>DNSサーバ: DNSクエリ（問い合わせ）の送信 activate DNSサーバ DNSサーバ-->>ブラウザ: IPアドレスを返す deactivate DNSサーバ ブラウザ->>Webサーバ: HTTPリクエスト activate Webサーバ Webサーバ-->>ブラウザ: HTTPレスポンス deactivate Webサーバ その次に、ブラウザは取得したデータ（HTTPレスポンス）を解析し、HTMLの部分を取り出す。 取得したHTTPレスポンスの例（HTTPはテキストベースのプロトコル）
+HTTP/1.1 200 OK\nContent-Type: text/html; charset=UTF-8\n\n<html><head><title>My First Web Page</title></head><body><h1>Hello, World!</h1><div><p>This is a paragraph.</p><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></div></body></html> 見やすいようにすると以下の形式となる"><meta property="og:locale" content="ja_jp"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-04-10T21:07:47+09:00"><meta property="article:modified_time" content="2025-04-10T21:07:47+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Building the Browser From Scratch"><meta name=twitter:description content="「作って学ぶ」ブラウザのしくみ を読んだ
+Amazonのリンクはこちら
+以下に簡単に内容をまとめる
+1. ブラウザを知る まずは、ブラウザが画面を表示するまでの全体像をまとめる。
+ブラウザはまず、以下の流れでデータを取得する。 sequenceDiagram participant ブラウザ participant DNSサーバ participant Webサーバ ブラウザ->>DNSサーバ: DNSクエリ（問い合わせ）の送信 activate DNSサーバ DNSサーバ-->>ブラウザ: IPアドレスを返す deactivate DNSサーバ ブラウザ->>Webサーバ: HTTPリクエスト activate Webサーバ Webサーバ-->>ブラウザ: HTTPレスポンス deactivate Webサーバ その次に、ブラウザは取得したデータ（HTTPレスポンス）を解析し、HTMLの部分を取り出す。 取得したHTTPレスポンスの例（HTTPはテキストベースのプロトコル）
+HTTP/1.1 200 OK\nContent-Type: text/html; charset=UTF-8\n\n<html><head><title>My First Web Page</title></head><body><h1>Hello, World!</h1><div><p>This is a paragraph.</p><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></div></body></html> 見やすいようにすると以下の形式となる"><link rel=canonical href=https://hiro20220528.github.io/posts/building-the-browser-from-scratch/></head><body class="bg-(--bg) text-black antialiased duration-200 ease-out [-webkit-tap-highlight-color:transparent] dark:text-white"><header class="mx-auto flex h-[4.5rem] max-w-(--w) px-8 whitespace-nowrap lg:justify-center"><div class="relative z-50 flex items-center ltr:mr-auto rtl:ml-auto"><a class="-translate-y-[1px] text-2xl font-medium" href=https://hiro20220528.github.io/>Yuta のブログ</a><div class="btn-dark text-[0px] ltr:ml-4 rtl:mr-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.png)_left_center/_auto_theme('spacing.6')_no-repeat] [transition:_background-position_0.4s_steps(5)] dark:[background-position:right]" role=button aria-label=Dark></div></div><div class="btn-menu relative z-50 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden ltr:-mr-8 rtl:-ml-8" role=button aria-label=Menu></div><script>const htmlClass=document.documentElement.classList;setTimeout(()=>{htmlClass.remove("not-ready")},10);const btnMenu=document.querySelector(".btn-menu");btnMenu.addEventListener("click",()=>{htmlClass.toggle("open")});const metaTheme=document.querySelector('meta[name="theme-color"]'),lightBg="#faf8f1".replace(/"/g,""),setDark=e=>{metaTheme.setAttribute("content",e?"#000":lightBg),htmlClass[e?"add":"remove"]("dark"),localStorage.setItem("dark",e)},darkScheme=window.matchMedia("(prefers-color-scheme: dark)");if(htmlClass.contains("dark"))setDark(!0);else{const e=localStorage.getItem("dark");setDark(e?e==="true":darkScheme.matches)}darkScheme.addEventListener("change",e=>{setDark(e.matches)});const btnDark=document.querySelector(".btn-dark");btnDark.addEventListener("click",()=>{setDark(localStorage.getItem("dark")!=="true")})</script><div class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full flex-col justify-center bg-(--bg) pb-16 duration-200 select-none lg:static lg:h-auto lg:flex-row lg:bg-transparent! lg:pb-0 lg:transition-none"><nav class="lg:ml-12 lg:flex lg:flex-row lg:items-center lg:space-x-10 rtl:space-x-reverse"><a class="block text-center text-xl leading-[5rem] lg:text-base lg:font-normal" href=/profile/>Profile</a><a class="block text-center text-xl leading-[5rem] lg:text-base lg:font-normal" href=/about/>About</a></nav><nav class="mt-12 flex justify-center space-x-10 lg:mt-0 lg:items-center ltr:lg:ml-14 rtl:space-x-reverse rtl:lg:mr-14 dark:invert"><a class="h-7 w-7 text-[0px] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6" style=--url:url(./twitter.svg) href=https://twitter.com/_____yyuta target=_blank rel=me>twitter</a>
+<a class="h-7 w-7 text-[0px] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6" style=--url:url(./github.svg) href=https://github.com/Hiro20220528 target=_blank rel=me>github</a>
+<a class="h-7 w-7 text-[0px] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6" style=--url:url(./rss.svg) href=https://hiro20220528.github.io/index.xml target=_blank rel=alternate>rss</a></nav></div></header><main class="prose prose-neutral dark:prose-invert relative mx-auto min-h-[calc(100vh-9rem)] max-w-(--w) px-8 pt-14 pb-16"><article><header class=mb-14><h1 class="my-0! pb-2.5">Building the Browser From Scratch</h1><div class="text-xs antialiased opacity-60"><time>Apr 10, 2025</time></div></header><section><p>「作って学ぶ」ブラウザのしくみ を読んだ</p><p>Amazonのリンクは<a href="https://www.amazon.co.jp/dp/4297145464?ref=ppx_yo2ov_dt_b_fed_asin_title">こちら</a></p><p>以下に簡単に内容をまとめる</p><details><summary style=font-size:1.5rem class=chapter-1>1. ブラウザを知る</summary><p>まずは、ブラウザが画面を表示するまでの全体像をまとめる。</p><ol><li>ブラウザはまず、以下の流れでデータを取得する。</li></ol><div class=mermaid>sequenceDiagram
+participant ブラウザ
+participant DNSサーバ
+participant Webサーバ
+ブラウザ->>DNSサーバ: DNSクエリ（問い合わせ）の送信
+activate DNSサーバ
+DNSサーバ-->>ブラウザ: IPアドレスを返す
+deactivate DNSサーバ
+ブラウザ->>Webサーバ: HTTPリクエスト
+activate Webサーバ
+Webサーバ-->>ブラウザ: HTTPレスポンス
+deactivate Webサーバ</div><ol><li>その次に、ブラウザは取得したデータ（HTTPレスポンス）を解析し、HTMLの部分を取り出す。</li></ol><p>取得したHTTPレスポンスの例（HTTPはテキストベースのプロトコル）</p><pre tabindex=0><code>HTTP/1.1 200 OK\nContent-Type: text/html; charset=UTF-8\n\n&lt;html&gt;&lt;head&gt;&lt;title&gt;My First Web Page&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;Hello, World!&lt;/h1&gt;&lt;div&gt;&lt;p&gt;This is a paragraph.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Item 1&lt;/li&gt;&lt;li&gt;Item 2&lt;/li&gt;&lt;li&gt;Item 3&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre><p>見やすいようにすると以下の形式となる</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>HTTP/1.1 200 OK
+</span></span><span style=display:flex><span>Content-Type: text/html; charset=UTF-8
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>html</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>title</span>&gt;My First Web Page&lt;/<span style=color:#f92672>title</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>h1</span>&gt;Hello, World!&lt;/<span style=color:#f92672>h1</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>div</span>&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>p</span>&gt;This is a paragraph.&lt;/<span style=color:#f92672>p</span>&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>ul</span>&gt;
+</span></span><span style=display:flex><span>                &lt;<span style=color:#f92672>li</span>&gt;Item 1&lt;/<span style=color:#f92672>li</span>&gt;
+</span></span><span style=display:flex><span>                &lt;<span style=color:#f92672>li</span>&gt;Item 2&lt;/<span style=color:#f92672>li</span>&gt;
+</span></span><span style=display:flex><span>                &lt;<span style=color:#f92672>li</span>&gt;Item 3&lt;/<span style=color:#f92672>li</span>&gt;
+</span></span><span style=display:flex><span>            &lt;/<span style=color:#f92672>ul</span>&gt;
+</span></span><span style=display:flex><span>        &lt;/<span style=color:#f92672>div</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>html</span>&gt;
+</span></span></code></pre></div><ol start=3><li>ブラウザは取得したHTMLを以下の流れで解析する。</li></ol><div class=mermaid>graph LR
+Text[文字列] --> Token[トークン]
+Token --> DOM[DOMツリー]</div><p>解析の流れについては後の章で詳しく説明する。</p><ol start=4><li>CSS, javascriptも同様に解析する。</li></ol><p>解析の流れについては後の章で詳しく説明する。</p></details><details><summary style=font-size:1.5rem class=chapter-2>2. URLを分解する</summary><p>URLはブラウザを使用してどのWebサイトを閲覧したいかを指定するために使用する.</p><p>以下がURLの構成である.</p><pre tabindex=0><code>https://&lt;host&gt;:&lt;port&gt;/&lt;path&gt;?&lt;searchpart&gt;
+</code></pre><p>以下がURLの例である</p><pre tabindex=0><code>https://www.google.com/search?q=browser
+</code></pre><p>以下がURLの構成を表すRustのコードである.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Url</span> {
+</span></span><span style=display:flex><span>    url: String, <span style=color:#75715e>// https://www.google.com/search?q=browser&amp;test=test
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    host: String, <span style=color:#75715e>// www.google.com
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    port: String, <span style=color:#75715e>// 80
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    path: String, <span style=color:#75715e>// /search
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    serchpart: String, <span style=color:#75715e>// q=browser&amp;test=test
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
+</span></span></code></pre></div><p><code>Url</code>構造体は文字列をパースして各フィールドに値を設定する.</p><p>以下は<code>host</code>フィールドの値を取得するRustのコードである.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>extract_host</span>(<span style=color:#f92672>&amp;</span>self) -&gt; String {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// ex: url = &#34;http://example.com:8080/path/to/resource?query=string&#34;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>let</span> url_parts: Vec<span style=color:#f92672>&lt;&amp;</span><span style=color:#66d9ef>str</span><span style=color:#f92672>&gt;</span> <span style=color:#f92672>=</span> self
+</span></span><span style=display:flex><span>            .url
+</span></span><span style=display:flex><span>            .trim_start_matches(<span style=color:#e6db74>&#34;http://&#34;</span>)
+</span></span><span style=display:flex><span>            .splitn(<span style=color:#ae81ff>2</span>, <span style=color:#e6db74>&#34;/&#34;</span>)
+</span></span><span style=display:flex><span>            .collect();
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// urlをhttp://の部分を取り除いて, 次の/を探して分割する
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// ex: url_parts = [&#34;example.com:8080&#34;, &#34;path/to/resource?query=string&#34;]
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>let</span> Some(index) <span style=color:#f92672>=</span> url_parts[<span style=color:#ae81ff>0</span>].find(<span style=color:#e6db74>&#39;:&#39;</span>) {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// ポート番号が存在する場合, ポート番号の前の部分をhostとする
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            url_parts[<span style=color:#ae81ff>0</span>][<span style=color:#f92672>..</span>index].to_string()
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// ポート番号が存在しない場合, そのままhostとする
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            url_parts[<span style=color:#ae81ff>0</span>].to_string()
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></div><p>上のような関数呼び出しを各フィールドごとに呼び出して初期化を行い, Url構造体を作成する.</p></details><details><summary style=font-size:1.5rem class=chapter-3>3. HTTPを実装する</summary><p>HTTPには現在4つのバージョンがある.</p><ul><li>HTTP/1.0</li><li>HTTP/1.1</li><li>HTTP/2</li><li>HTTP/3</li></ul><p>本書では, HTTP/1.1の仕様書をベースにプロトコルを実装して, GETリクエストを作成・送信する.</p><p>HTTP/1.1はテキストベースのプロトコルである.</p><p>HTTPメッセージは, 大きく分けて3つの要素に分けることができる.</p><ul><li>1行目 : スタートライン (リクエスト時はリクエストライン, レスポンス時はステータスライン)</li><li>2行目 : ヘッダ</li><li>3行目 : ボディ</li></ul><p>以下はHTTPメッセージの各要素の説明</p><ol><li>スタートライン (リクエストとレスポンスで2種類存在)</li></ol><ul><li>リクエストライン &mldr; どんな方法で、どのリソースにどのバージョンでアクセスするかの3つの情報を含む</li></ul><pre tabindex=0><code>request-line = method SP request-target SP HTTP-version CRLF
+(SPはスペース, CRLFは改行)
+</code></pre><p>以下はその一例</p><pre tabindex=0><code>GET /index.html HTTP/1.1
+</code></pre><ul><li>ステータスライン &mldr; HTTPのどのバージョンを使うか, アクセス結果, 結果の説明の3つの情報を含む</li></ul><pre tabindex=0><code>status-line = HTTP-version SP status-code SP reason-phrase CRLF
+(SPはスペース, CRLFは改行)
+</code></pre><p>以下はその一例</p><pre tabindex=0><code>HTTP/1.1 200 OK
+</code></pre><p>Status Codeは, リクエストの成否を示す.</p><ul><li>1xx : リクエストは受信されたが, まだ処理を続けている</li><li>2xx : リクエストは正常に処理された</li><li>3xx : リクエストを完了するためにリダイレクトの処理を行う必要がある</li><li>4xx : リクエストが間違っているなど, クライアント側に問題がある</li><li>5xx : サーバ側でエラーが発生した</li></ul><ol start=2><li>ヘッダ &mldr; ヘッダは (:) で区切られたキーとバリューのセットで構成される.</li></ol><p><code>header-field = field-name ":" OWS field-value OWS</code> (OWSは任意の空白文字)</p><p>以下はその一例</p><pre tabindex=0><code>Content-Type: text/html charset=utf-8
+</code></pre><ol start=3><li>ボディ &mldr; GETレスポンスのボディにはHTMLなどのリソースの内容が含まれる.</li></ol><p>HTTPはテキストベースのプロトコルなので, 1行のテキストが返信される.
+そのテキストを分割して, HTTP レスポンスの各要素を取得する.</p></details><details><summary style=font-size:1.5rem class=chapter-4>4. HTMLを解析する</summary><p>HTTP レスポンスのボディにはHTMLなどのリソースの内容が含まれる.</p><p>この章ではHTMLを解析する. HTMLからDOMツリーを生成する.</p><p>HTMLは以下の構成で成り立っている.</p><ul><li>タグ &mldr; &lt;p> や &lt;div> など</li><li>コンテンツ &mldr; タグとタグの間に配置されるテキストなど</li><li>属性 &mldr; タグによっては属性を持つことができる. 例えば &lt;p id=&ldquo;content&rdquo;> の id が属性である.</li></ul><p>文字列をトークンに解析する軸解析は以下のような状態遷移で行われる.</p><div class=mermaid>stateDiagram
+[*] --> DataState
+DataState --> TagOpenState: < (タグ開始)
+DataState --> CharacterReferenceState: & (文字参照)
+TagOpenState --> TagNameState: a-z, A-Z
+TagOpenState --> EndTagOpenState: /
+TagNameState --> AttributeNameState: 空白文字
+TagNameState --> DataState: \>
+AttributeNameState --> AttributeValueState: =
+AttributeValueState --> AttributeNameState: 値終了
+AttributeNameState --> DataState: \>
+EndTagOpenState --> TagNameState: a-z, A-Z
+CharacterReferenceState --> DataState: 参照完了</div><p>イメージとしては文字列を一文字づつ読み込み, その文字によって状態を遷移させる.</p><p>その後, DOMツリーを生成する.</p><p>以下の手順でDOMツリーを生成する.</p><div class=mermaid>stateDiagram
+[*] --> Initial
+Initial --> BeforeHTML
+BeforeHTML --> BeforeHEAD
+BeforeHEAD --> InHEAD
+InHEAD --> AfterHEAD
+AfterHEAD --> InBody
+InBody --> InBody
+InBody --> AfterBody
+AfterBody --> AfterAfterBody
+AfterAfterBody --> [*]</div><p>例えば上の手順で以下のsample.htmlを実行すると次のようなDOMツリーのイメージとなる</p><p>sample.html</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>&lt;<span style=color:#f92672>html</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>h1</span>&gt;Hello World&lt;/<span style=color:#f92672>h1</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>div</span>&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>p</span>&gt;This is a sample html.&lt;/<span style=color:#f92672>p</span>&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>ul</span>&gt;
+</span></span><span style=display:flex><span>                &lt;<span style=color:#f92672>li</span>&gt;item1&lt;/<span style=color:#f92672>li</span>&gt;
+</span></span><span style=display:flex><span>                &lt;<span style=color:#f92672>li</span>&gt;item2&lt;/<span style=color:#f92672>li</span>&gt;
+</span></span><span style=display:flex><span>                &lt;<span style=color:#f92672>li</span>&gt;item3&lt;/<span style=color:#f92672>li</span>&gt;
+</span></span><span style=display:flex><span>            &lt;/<span style=color:#f92672>ul</span>&gt;
+</span></span><span style=display:flex><span>        &lt;/<span style=color:#f92672>div</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>html</span>&gt;
+</span></span></code></pre></div><p>DOMツリーのイメージ</p><div class=mermaid>graph LR
+html[HTML] --> head[HEAD]
+html --> body[BODY]
+body --> h1[H1]
+h1 --> hw[Hello World]
+body --> div[DIV]
+div --> p[P]
+p --> p_text[This is a sample html.]
+div --> ul[UL]
+ul --> liA[LI]
+liA --> liA_text[item1]
+ul --> liB[LI]
+liB --> liB_text[item2]
+ul --> liC[LI]
+liC --> liC_text[item3]</div><p>アルゴリズムにはFIFOを用いる.
+bodyの文字列を一文字ずつ見ていきトークン化する. そのトークンによってDOMツリーを形成していく. 基本的にEndTagが出現するとキューから要素を取り出す.</p><p>以下がイメージ図</p><pre tabindex=0><code>|    |    |    |    |    |    |    |
+|    | -&gt; |head| -&gt; |    | -&gt; |body| -&gt; 
+|html|    |html|    |html|    |html|
+|____|    |____|    |____|    |____|
+
+
+|    |    | H1 |    | p  |
+|body| -&gt; |body| -&gt; |body|　...
+|html|    |html|    |html|
+|____|    |____|    |____|
+</code></pre></details><details><summary style=font-size:1.5rem class=chapter-5>5. CSSで装飾する</summary><p>cssは以下のような構成で成り立っている.</p><pre tabindex=0><code>セレクタ {
+    プロパティ : 値;
+}
+</code></pre><p>以下が実際の例である.</p><pre tabindex=0><code>div {
+    background-color: red;
+}
+</code></pre><p>CSSはCSSOMというCSS Object Modelのツリー構造にパースされる.</p><p>例えば, 以下のCSSは次のツリー構造となる.</p><pre tabindex=0><code>#id {
+    color: red;
+}
+
+.class {
+    color: blue;
+}
+</code></pre><div class=mermaid>graph TD
+StyleSheet --> Rule1[Rule]
+Rule1 --> Selector1[Selector]
+Selector1 --> t1[#id]
+Rule1 --> Declaration1[Declaration]
+Declaration1 --> Color1[color]
+Declaration1 --> red
+StyleSheet --> Rule2[Rule]
+Rule2 --> Selector2[Selector]
+Selector2 --> t2[.class]
+Rule2 --> Declaration2[Declaration]
+Declaration2 --> Color2[color]
+Declaration2 --> blue</div><p>アルゴリズムはHTMLのパースと似ている.
+先頭からトークン化していき, オブジェクトのツリーを作成する.</p><h3 id=レイアウトツリーの構築>レイアウトツリーの構築</h3><p>DOMツリーとCSSOMツリーを結合してレイアウトツリーを作成する.
+DOMツリーのうち, display: none の要素はレイアウトツリーに含めない.</p><p>レイアウトツリーを構築するアルゴリズムは, 端的に説明すると, DOMのBodyのノードからスタートし, first childとnext siblingを再帰的にたどっていく.</p><p>レイアウトツリーは以下の <code>LayoutView</code>オブジェクトと <code>LayoutObject</code>オブジェクトから成り立っている.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>LayoutView</span> {
+</span></span><span style=display:flex><span>    root: Option<span style=color:#f92672>&lt;</span>Rc<span style=color:#f92672>&lt;</span>RefCell<span style=color:#f92672>&lt;</span>LayoutObject<span style=color:#f92672>&gt;&gt;&gt;</span>,
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>LayoutObject</span> {
+</span></span><span style=display:flex><span>    kind: <span style=color:#a6e22e>LayoutObjectKind</span>,
+</span></span><span style=display:flex><span>    node: <span style=color:#a6e22e>Rc</span><span style=color:#f92672>&lt;</span>RefCell<span style=color:#f92672>&lt;</span>Node<span style=color:#f92672>&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    first_child: Option<span style=color:#f92672>&lt;</span>Rc<span style=color:#f92672>&lt;</span>RefCell<span style=color:#f92672>&lt;</span>LayoutObject<span style=color:#f92672>&gt;&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    next_sibling: Option<span style=color:#f92672>&lt;</span>Rc<span style=color:#f92672>&lt;</span>RefCell<span style=color:#f92672>&lt;</span>LayoutObject<span style=color:#f92672>&gt;&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    parent: <span style=color:#a6e22e>Weak</span><span style=color:#f92672>&lt;</span>RefCell<span style=color:#f92672>&lt;</span>LayoutObject<span style=color:#f92672>&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    style: <span style=color:#a6e22e>ComputedStyle</span>,
+</span></span><span style=display:flex><span>    point: <span style=color:#a6e22e>LayoutPoint</span>,
+</span></span><span style=display:flex><span>    size: <span style=color:#a6e22e>LayoutSize</span>,
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>レイアウトツリーの作成後表示用の, display_itemsを作成する. これはレイアウトツリーから作成される. 最終的にPage構造体（ブラウザの各ページに対応する）は以下のようになる.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Page</span> {
+</span></span><span style=display:flex><span>    browser: <span style=color:#a6e22e>Weak</span><span style=color:#f92672>&lt;</span>RefCell<span style=color:#f92672>&lt;</span>Browser<span style=color:#f92672>&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    frame: Option<span style=color:#f92672>&lt;</span>Rc<span style=color:#f92672>&lt;</span>RefCell<span style=color:#f92672>&lt;</span>Window<span style=color:#f92672>&gt;&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    style: Option<span style=color:#f92672>&lt;</span>StyleSheet<span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>    layout_view: Option<span style=color:#f92672>&lt;</span>LayoutView<span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>    display_items: Vec<span style=color:#f92672>&lt;</span>DisplayItem<span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>ここから実際のGUIの描写に移行する.</p></details><details><summary style=font-size:1.5rem class=chapter-6>6. GUIを実装する</summary><ul><li>通常GUIアプリケーション開発には有名なライブラリを用いるが, ここでは独自のWasabiOSのnoliライブラリのGUI関連のAPIを用いる.</li><li>ここで実装するGUIは特に仕様に準拠しているわけではない.</li></ul><p>描写するには基本的にOSのAPIを用いる.</p><p>アドレスバーなどをはじめに描写する. ブラウザの左上を(0, 0)として, そこから描画を開始する.</p><p>キーボードの入力や, マウスの位置やクリックなどを取得するAPIをループで動かし, それに応じた処理を行う.
+例えば, アドレスバーをクリックしたときは、 クリックした位置からアドレスバーの位置ならば入力を受け付けるようにするなどというものである.
+a タグに関しても, クリックした要素の親がaタグならhrefを取得してきてそのURLに遷移するなどというものである. 意外と脳筋な感じのアルゴリズム. 地味.</p></details><details><summary style=font-size:1.5rem class=chapter-7>7. JavaScriptを実装する</summary><p>JavaScriptは インタプリタまたはJIT(Just In Time)でコンパイルされる言語.</p><ul><li>インタプリタ言語 &mldr; コードを1行ずつ読み取り, 逐次的に実行する</li><li>コンパイラ言語 &mldr; コードを機械語に変換してから実行する</li><li>JIT &mldr; クラスや関数などの一定の単位のコードが実行される直後にコードをコンパイルし, 実行する. ChromeなどではJITが採用されている.</li></ul><p>ここで実装するJavaScriptは, インタプリタ方式を採用する.まず, コードから木構造を作成して, その木構造を走査しながらノードの実行を行う.</p><h3 id=2種類のレンダリング方式>2種類のレンダリング方式</h3><p>JavaScriptを使用すると動的なページを作成することができる. 動的なページには以下の二種類が存在する</p><ul><li>サーバーサイドレンダリング (SSR) &mldr; サーバー側でHTMLを生成. (サーバー側で行うため, JavaScript以外のプログラミング言語も使える)</li><li>クライアントサイドレンダリング (CSR) &mldr; ユーザーにHTML, CSS, JavaScriptを送る. ユーザーのブラウザでJavaScriptが実行され, ページの変更が行われる.</li></ul><h3 id=ブラウザapi>ブラウザAPI</h3><p>ブラウザAPIは, JavaScriptから直接呼び出すことができるが, JavaScript自体の組み込み関数ではなく, ブラウザにしか存在しない機能である. 以下のようなAPIの例が存在する.</p><ul><li>DOM API &mldr; JavaScriptを使ってドキュメントの要素にアクセスや操作が可能</li><li>Fetch API &mldr; Web上のリソースを取得するためのAPI</li><li>Canvas API &mldr; JavaScriptを使ってグラフィックやアニメーションを描画できる</li></ul><p>例えば, getElementById はDOM APIの一つであり, IDを指定することで特定のDOMノードにアクセス可能である.</p><h3 id=javascriptのコードを実行するための流れ>JavaScriptのコードを実行するための流れ</h3><p>JavaScriptのコードも実装もHtml, CSSと同じようなものである.
+文字列からトークンを生成して, 木構造の形に変換, そして実行する.</p><ol><li>コードをトークン化</li><li>トークンをASTに変換</li><li>ASTを実行</li></ol></details></section><nav class="mt-24 flex overflow-hidden rounded-xl bg-black/[3%] text-lg leading-[1.2]! *:flex *:w-1/2 *:items-center *:p-5 *:font-medium *:no-underline dark:bg-white/[8%] [&>*:hover]:bg-black/[2%] dark:[&>*:hover]:bg-white/[3%]"><a class="justify-end pl-3 ltr:ml-auto rtl:mr-auto" href=https://hiro20220528.github.io/posts/how-to-create-this-site/><span>How to Create This Site</span><span class="ltr:ml-1.5 rtl:mr-1.5">→</span></a></nav></article></main><footer class="mx-auto flex h-[4.5rem] max-w-(--w) items-center px-8 text-xs tracking-wider uppercase opacity-60"><div class=mr-auto>© 2025, Yuta</div><a class="link mx-6" href=https://gohugo.io/ rel=noopener target=_blank>powered by hugo</a>
+<a class=link href=https://github.com/nanxiaobei/hugo-paper rel=noopener target=_blank>hugo-paper</a>
+<script src=https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js></script><script>const prefersDarkMode=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;mermaid.initialize({startOnLoad:!0,theme:prefersDarkMode?"dark":"default"}),window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",e=>{const t=e.matches?"dark":"default";mermaid.initialize({startOnLoad:!0,theme:t})})</script></footer></body></html>
